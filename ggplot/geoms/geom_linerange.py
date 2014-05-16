@@ -33,15 +33,18 @@ class geom_linerange(geom):
         ymin = pinfo.pop('ymin')
         ymax = pinfo.pop('ymax')
 
-        _left_gap = 0
-        _spacing_factor = 0
-        _sep = 0
-        
-        left = np.arange(0, len(x) + 2)
+        if 'levels' in pinfo:
+            levels = pinfo.pop('levels')
+            if 'x' in levels:
+                levels = levels['x']
+
+        left = np.arange(0, len(levels) + 2)
         i = 0
-        for (_x, _ymin, _ymax) in zip(x, ymin, ymax):
+        for level in levels:
             i += 1
-            ax.plot([i, i], [_ymin, _ymax], **pinfo)
+            for (_x, _ymin, _ymax) in zip(x, ymin, ymax):
+                if _x==level:
+                    ax.plot([i, i], [_ymin, _ymax], **pinfo)
 
         ax.set_xticks(left)
-        ax.set_xticklabels([""] + x)
+        ax.set_xticklabels([""] + levels)

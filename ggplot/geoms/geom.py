@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 from copy import deepcopy
 
 import pandas as pd
+import numpy as np
 from matplotlib.cbook import iterable
 
 import ggplot.stats
@@ -133,6 +134,10 @@ class geom(object):
             _data.update(self._cache['manual_aes_mpl']) # should happen before the grouping
             pinfo = deepcopy(self._cache['default_aes_mpl'])
             pinfo.update(_data)
+            levels = {}
+            for col in data.ix[:,data.dtypes==np.object]:
+                levels[col] = data[col].unique()
+            # pinfo['levels'] = levels
             self._plot_unit(pinfo, ax)
 
     def _plot_unit(self, pinfo, ax):
